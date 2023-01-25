@@ -4,18 +4,18 @@ import utilStyles from '../styles/utils.module.css';
 import { getSortedPostsData } from '../lib/posts';
 import Link from 'next/link';
 import Date from '../components/date';
+import { GetStaticProps } from 'next';
 
 //|> OPTION 1: Static Generation.
 // This happens once at build time, it's not suitable for data that updates frequently or changes on every user request. GOOD for fast render and SEO.
-export async function getStaticProps() {
+export const getStaticProps: GetStaticProps = async () => {
   const allPostsData = getSortedPostsData();
-
   return {
     props: {
       allPostsData,
     },
   };
-}
+};
 
 //|> OPTION 2: Server-side Rendering.
 //You should use getServerSideProps only if you need to pre-render a page whose data must be fetched at request time. Time to first byte (TTFB) will be slower than getStaticProps because the server must compute the result on every request, and the result cannot be cached by a CDN without extra configuration.
@@ -47,25 +47,25 @@ function Profile() {
 //En este ejemplo, el hook useSWR acepta una key que es un cadena y una función fetcher. key es un indentificador único de los datos (normalmente la URL de la API) y pasará al fetcher. El fetcher puede ser cualquier función asíncrona que devuelve datos, puedes utilizar el fetch nativo o herramientas como Axios.
 //El hook devuelve 2 valores: data y error, basados en el estado de la solicitud.
 
-export default function Home({ allPostsData }) {
+export default function Home({
+  allPostsData,
+}: {
+  allPostsData: {
+    date: string;
+    title: string;
+    id: string;
+  }[];
+}) {
   return (
     <Layout home>
       <Head>
         <title>{siteTitle}</title>
       </Head>
       <section className={utilStyles.headingMd}>
+        <p>[Your Self Introduction]</p>
         <p>
-          Hello, I'm Alfonso. I'm a software enginer. You can contact me on{' '}
-          <a
-            href="https://www.linkedin.com/in/alfonsomontesdeoca/"
-            target="_blank"
-          >
-            LinkedIn
-          </a>
-        </p>
-        <p>
-          (This is a sample website - I building this on{' '}
-          <a href="https://nextjs.org/learn">Next.js tutorial</a>.)
+          (This is a sample website - you’ll be building a site like this in{' '}
+          <a href="https://nextjs.org/learn">our Next.js tutorial</a>.)
         </p>
       </section>
       <section className={`${utilStyles.headingMd} ${utilStyles.padding1px}`}>
